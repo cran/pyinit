@@ -1,13 +1,12 @@
-492b30ee86ded59b0896f45eafb0a498 *DESCRIPTION
+7848360698e31098e40485cfe5e21e8e *DESCRIPTION
 081bd0bc7bbac8047063b1bb45695d74 *NAMESPACE
-300997f3a67155f2496be0248477483c *NEWS.md
+e382e3ab5c287c2379e8f4012c7b3de0 *NEWS.md
 24cb11b5e4db048177402a5cda564391 *R/control.R
 70b6fa147bc4f6f94b2aad64ea4b92d5 *R/mscale.R
-2437b2288d874995f668a92bf18d5c37 *R/pyinit.R
-c311d12ddd623dbfcba401872a503b94 *README.md
+2a1c39d5d98ce4547b3460d0c49df65f *R/pyinit.R
 a1cc7e63ceaaa2cc09c0e162180b07b0 *inst/COPYRIGHTS
-02903faca73b4f2d7e8e9e91abc6ac47 *man/mscale.Rd
-13e67f00aaeb2fa4325bc325ee7f591b *man/pyinit.Rd
+eb90753d4844ef16246a8fc5a3d4716f *man/mscale.Rd
+553e0bf3fdfc30a7cbf98119c7d57ba5 *man/pyinit.Rd
 a60e6ce92fcb51546e899f53975cd9d5 *src/AuxMemory.c
 ae91c924e78873bd85fcc9d7e499e13e *src/AuxMemory.h
 c9b85c23a93ed9555c2ccd2b67dc426e *src/BLAS.h
@@ -19,7 +18,7 @@ e992e9f6bba7e8ffb5e9123805ac6b4d *src/Control.h
 ae9ad96d3ed493fa5a16131d4607f5cd *src/config.h
 3800cf1ed2e0304a34e4848cd23e0ff7 *src/evd.c
 4114e676ab5ad6859efe68694c9825d2 *src/evd.h
-2a690de8f34ba2423f652472e274c5a1 *src/fastPY.c
+797cb1fb8ed86d83c19c7f8a5225fc2c *src/fastPY.c
 b0981886f5fb458cbd896f431527b6ff *src/fastPY.h
 a11d34dc42d7ee814d2365886fb1fe1a *src/mscale.c
 9287d9fc3bc55cf9e73a314a5037c1c2 *src/mscale.h
@@ -28,3 +27,6 @@ a11d34dc42d7ee814d2365886fb1fe1a *src/mscale.c
 52cc169047e21ae6ca3a4526f099c5ff *src/psc.c
 b83c05d211800c00c94f14086c0a1b89 *src/psc.h
 d39ad38e001d81b3eb56a8837a2950eb *src/rinterface.c
+247f5b970496ee8e37f0281f8f7034ef *tests/debug.R
+9f3b45631af7d501b70a8903b229c207 *tests/testthat.R
+d3ea4ae2fb25909bcf6e448409d70d54 *tests/testthat/test-exact_fit.R
