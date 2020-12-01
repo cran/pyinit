@@ -58,6 +58,7 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
     int iter = 0;
     int j;
     int numPSCs = 0;
+    int numEsts = 0;
     int linalgError = 0;
     int compCoefsStatus = 0;
     double *restrict currentPSC;
@@ -87,7 +88,7 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
 
         /* 1. Estimate coefficients for the residuales filtered data (currentXtr) */
         compCoefsStatus = computeOLSCoefs(filteredXtr, filteredY, currentNobs, nvar, currentEst,
-                                          &auxmem);
+                                          &auxmem, 1);
         linalgError = auxmem.intWorkMem[0];
         if (linalgError != 0) {
             break;
@@ -101,7 +102,7 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
             bestCoefEst = currentEst;
             *minObjective = *tmpObjective;
         }
-        ++tmpObjective;
+        ++numEsts;
 
         /* 2. Calculate PSC for current work data */
         computeResiduals(currentXtr, currentY, currentNobs, nvar, currentEst, auxmem.residuals);
@@ -111,6 +112,10 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
             linalgError = -numPSCs;
             break;
         }
+
+        // move pointers to next estimate
+        ++tmpObjective;
+        currentEst += nvar;
 
         for(j = 0; j < numPSCs; ++j) {
             currentPSC = pscs + currentNobs * j;
@@ -123,10 +128,9 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                                                scaledThreshold, lessThan);
 
             /* 4.1.2. Estimate coefficients */
-            currentEst += nvar;
             if (filteredNobs > 0) {
                 compCoefsStatus = computeOLSCoefs(filteredXtr, filteredY, filteredNobs, nvar,
-                                                  currentEst, &auxmem);
+                                                  currentEst, &auxmem, 0);
             } else {
                 compCoefsStatus = OLS_COEFFICIENTS_ERROR;
             }
@@ -140,11 +144,12 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                     *minObjective = *tmpObjective;
                     bestCoefEst = currentEst;
                 }
-            } else {
-                *tmpObjective = 0;
-                memset(currentEst, 0, nvar * sizeof(double));
+
+                // move pointers to next estimate
+                ++numEsts;
+                ++tmpObjective;
+                currentEst += nvar;
             }
-            ++tmpObjective;
 
             /* 4.2.1. Thin out X and y based on large values of PSCs */
             scaledThreshold = getQuantile(currentPSC, currentNobs, ctrl->pscProportion,
@@ -155,10 +160,9 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                                                scaledThreshold, greaterThan);
 
             /* 4.2.2. Estimate coefficients */
-            currentEst += nvar;
             if (filteredNobs > 0) {
                 compCoefsStatus = computeOLSCoefs(filteredXtr, filteredY, filteredNobs, nvar,
-                                                  currentEst, &auxmem);
+                                                  currentEst, &auxmem, 0);
             } else {
                 compCoefsStatus = OLS_COEFFICIENTS_ERROR;
             }
@@ -172,12 +176,12 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                     *minObjective = *tmpObjective;
                     bestCoefEst = currentEst;
                 }
-            } else {
-                *tmpObjective = 0;
-                memset(currentEst, 0, nvar * sizeof(double));
-            }
-            ++tmpObjective;
 
+                // move pointers to next estimate
+                ++numEsts;
+                ++tmpObjective;
+                currentEst += nvar;
+            }
 
             /* 4.3.1. Thin out X and y based on large values of PSCs */
             scaledThreshold = getQuantile(currentPSC, currentNobs, ctrl->pscProportion,
@@ -188,10 +192,9 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                                                scaledThreshold, absoluteLessThan);
 
             /* 4.3.2. Estimate coefficients */
-            currentEst += nvar;
             if (filteredNobs > 0) {
                 compCoefsStatus = computeOLSCoefs(filteredXtr, filteredY, filteredNobs, nvar,
-                                                  currentEst, &auxmem);
+                                                  currentEst, &auxmem, 0);
             } else {
                 compCoefsStatus = OLS_COEFFICIENTS_ERROR;
             }
@@ -205,11 +208,11 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
                     *minObjective = *tmpObjective;
                     bestCoefEst = currentEst;
                 }
-            } else {
-                *tmpObjective = 0;
-                memset(currentEst, 0, nvar * sizeof(double));
+                // move pointers to next estimate
+                ++numEsts;
+                ++tmpObjective;
+                currentEst += nvar;
             }
-            ++tmpObjective;
         }
 
         if (linalgError != 0) {
@@ -242,6 +245,7 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
         }
 
         normPrevBest = normBest;
+        numEsts = 1;
 
         /* 6. Calculate residuals with best coefficient estimate again */
         computeResiduals(Xtr, y, nobs, nvar, bestCoefEst, auxmem.residuals);
@@ -266,10 +270,10 @@ int computePYEstimator(const double *restrict Xtr, const double *restrict y,
     free(filteredY);
 
     if (linalgError != 0) {
-        Rf_error("There was an error in one of the calls to LINPACK (%d)", linalgError);
+        Rf_error("There was an error in one of the calls to LAPACK (%d)", linalgError);
     }
 
-    return MAX_NUM_PSCS(numPSCs);
+    return numEsts;
 }
 
 
