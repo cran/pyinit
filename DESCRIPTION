@@ -1,8 +1,8 @@
 Package: pyinit
 Type: Package
 Title: Pena-Yohai Initial Estimator for Robust S-Regression
-Version: 1.1.2
-Date: 2021-10-19
+Version: 1.1.3
+Date: 2022-04-26
 Encoding: UTF-8
 Authors@R: c(
     person("David", "Kepplinger", , "david.kepplinger@gmail.com",
@@ -22,10 +22,10 @@ NeedsCompilation: yes
 Biarch: true
 Copyright: See the file COPYRIGHTS for copyright details on some of the
         functions.
-RoxygenNote: 7.1.1
-Packaged: 2021-10-19 23:13:55 UTC; david
+RoxygenNote: 7.1.2
+Packaged: 2022-04-26 14:44:36 UTC; david
 Author: David Kepplinger [aut, cre],
   Matias Salibian-Barrera [aut],
   Gabriela Cohen Freue [aut]
 Repository: CRAN
-Date/Publication: 2021-10-20 07:20:02 UTC
+Date/Publication: 2022-04-26 20:50:08 UTC
